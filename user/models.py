@@ -28,6 +28,7 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser):
     username = models.CharField("사용자 계정", max_length=20, unique=True)
     password = models.CharField("비밀번호", max_length=128)
+    join_data = models.DateTimeField("가입일", auto_now_add=True)
     # is_active가 False일 경우 계정이 비활성화됨
     is_active = models.BooleanField(default=True)
 
@@ -72,3 +73,8 @@ class UserProfile(models.Model):
     def __str__(self):
         return self.user.username
 
+
+class Hobby(models.Model):
+    name = models.CharField("취미 이름", max_length=20)
+    def __str__(self):
+        return self.name

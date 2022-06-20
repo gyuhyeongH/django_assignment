@@ -3,14 +3,25 @@ from django.contrib.auth import login, authenticate, logout
 # Create your views here.
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework import permissions
+from rest_framework import permissions, status
 from blog.models import Article
-
+from user.serializers import UserProfileSeralizer, UserSerializer,UserSignupSerializer
 
 class UserView(APIView): # CBV 방식
     permission_classes = [permissions.IsAuthenticated] # 로그인 된 사용자만 view 조회 가능
 
     def get(self, request):
-        user = request.user.is_authenticated
-        articles=Article.objects.filter(author_id=user)
-        return render(request, 'index.html', {'article':articles})
+        return Response(UserSerializer(request.user).data, status.HTTP_200_OK)
+
+    def post(self, request):
+        serializer = UserSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"message":"가입완료"})
+        else:
+            return Response({"message":"가입실패"})
+
+
+    def delete(self, request):
+        logout(request)
+        return Response({"message": "logout success!!"})

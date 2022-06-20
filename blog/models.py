@@ -9,8 +9,19 @@ class Category(models.Model):
 
 
 class Article(models.Model):
-    author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='user')
-    title = models.CharField(max_length=20, db_index=True)
-    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, related_name='category')
-    content = models.TextField(blank=True)
 
+    user = models.ForeignKey('user.User', verbose_name="작성자", on_delete=models.CASCADE)
+    title = models.CharField("제목", max_length=50)
+    category = models.ManyToManyField(Category, verbose_name="카테고리")
+    contents = models.TextField("본문")
+
+
+class Comment(models.Model):
+    user = models.ForeignKey(
+        'user.User', verbose_name='작성자', on_delete=models.CASCADE)
+    article = models.ForeignKey(
+        Article, verbose_name='게시글', on_delete=models.CASCADE)
+    contents = models.TextField("본문")
+
+    def __str__(self):
+        return f"{self.article.title} / {self.contents}"
