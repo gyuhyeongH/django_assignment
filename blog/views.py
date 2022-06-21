@@ -13,7 +13,7 @@ class ArticleView(APIView):
     def get(self, request):
         user = request.user
 
-        articles = ArticleModel.objects.filter(user=user)
+        articles = ArticleModel.objects.filter(user=user).order_by('start_view')
         titles = [article.title for article in articles]
 
         return Response({"article_list": titles})

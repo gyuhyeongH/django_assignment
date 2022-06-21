@@ -9,11 +9,11 @@ class Category(models.Model):
 
 
 class Article(models.Model):
-
-    user = models.ForeignKey('user.User', verbose_name="작성자", on_delete=models.CASCADE)
+    user = models.ForeignKey('user.User', verbose_name="작성자", on_delete=models.SET_NULL, null=True)
     title = models.CharField("제목", max_length=50)
     category = models.ManyToManyField(Category, verbose_name="카테고리")
-    contents = models.TextField("본문")
+    contents = models.TextField("본문", null=True)
+
 
 
 class Comment(models.Model):
