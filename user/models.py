@@ -29,6 +29,7 @@ class User(AbstractBaseUser):
     username = models.CharField("사용자 계정", max_length=20, unique=True)
     password = models.CharField("비밀번호", max_length=128)
     # is_active가 False일 경우 계정이 비활성화됨
+    join_date = models.DateField()
     is_active = models.BooleanField(default=True)
 
     # is_staff에서 해당 값 사용

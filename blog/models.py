@@ -1,5 +1,6 @@
 from django.db import models
 from user.models import User
+from django.utils import timezone
 # Create your models here.
 
 
@@ -13,7 +14,8 @@ class Article(models.Model):
     title = models.CharField("제목", max_length=50)
     category = models.ManyToManyField(Category, verbose_name="카테고리")
     contents = models.TextField("본문", null=True)
-
+    exposure_start_date = models.DateField("노출 시작 일자", default=timezone.now)
+    exposure_end_date = models.DateField("노출 종료 일자", default=timezone.now)
 
 
 class Comment(models.Model):
