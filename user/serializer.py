@@ -17,7 +17,7 @@ class UserSignupSerializer(serializers.ModelSerializer):
         user.save()
         return user
 
-    def create(self, *args, **kwargs):
+    def update(self, *args, **kwargs):
         user = super().create(*args, **kwargs)
         password = user.password
         user.set_password(password)

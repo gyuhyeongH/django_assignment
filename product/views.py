@@ -10,13 +10,17 @@ from product.models import Product
 # Create your views here.
 from datetime import datetime
 from django.db.models import Q
+from assign.permissions import RegisteredMorethanThreeDaysUser
 
 
 class ProductView(APIView):
+    
+    permission_classes = [RegisteredMorethanThreeDaysUser]
+
     def get(self, request):
         today = datetime.now()
         products = Product.objects.filter(
-            Q(exposure_start_date__lte=today, exposure_end_date__gte=today,)|
+            Q(exposure_end_date__gte=today, is_active=True)|
             Q(user=request.user)
         )
 
@@ -24,6 +28,7 @@ class ProductView(APIView):
         return Response(data, status=status.HTTP_200_OK)
 
     def post(self, request):
+        
         request.data['user'] = request.user.id
 
         product_serializer = ProductSerializer(data=request.data)
@@ -38,7 +43,8 @@ class ProductView(APIView):
     def put(self, request, product_id):
         product = Product.objects.get(id=product_id)
         product_serializer = ProductSerializer(product, data=request.data, partial=True)
-
+        print(product)
+        print(product_serializer)
         if product_serializer.is_valid():
             product_serializer.save()
             return Response(product_serializer.data, status=status.HTTP_200_OK)

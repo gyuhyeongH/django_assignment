@@ -1,3 +1,4 @@
+from urllib import response
 from rest_framework.permissions import BasePermission
 from datetime import timedelta, datetime
 from django.utils import timezone
@@ -11,6 +12,16 @@ class RegisteredMorethanThreeDaysUser(BasePermission):
 
     def has_permission(self, request, view):
         user = request.user
+        
+        if not user.is_authenticated:
+            response={
+                "detail":"로그인 해주세요",
+            }
+            raise GenericAPIException(status_code=status.HTTP_401_UNAUTHORIZED, detail=response)
+        
+        if user.is_authenticated and request.method in self.SAFE_METHODS:
+            return True
+        
         return bool(user.is_authenticated and
                     request.user.join_data < (timezone.now() - timedelta(days=3)))
 
